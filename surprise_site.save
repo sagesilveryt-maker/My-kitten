@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise for Bubu!</title>
+    <style>
+        :root {
+            --bg-color: #fffaf0;
+            --text-color: #5d4037;
+            --accent-pink: #ffdae9;
+            --accent-yellow: #fff9c4;
+            --btn-hover: #f48fb1;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            text-align: center;
+            margin: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #main-container { padding: 20px; transition: opacity 0.5s; }
+        .hidden { display: none; }
+
+        h1 { font-size: 1.8rem; }
+        #gift-display {
+            max-width: 280px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .button-group { display: flex; gap: 15px; justify-content: center; position: relative; min-height: 100px; width: 100%; }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: 0.2s;
+        }
+
+        .btn-yes { background-color: #a5d6a7; color: #1b5e20; }
+        .btn-no { background-color: #ef9a9a; color: #b71c1c; position: absolute; }
+        
+        .gift-btn { background-color: var(--accent-pink); }
+        .gift-btn.alt { background-color: var(--accent-yellow); }
+    </style>
+</head>
+<body>
+
+    <div id="question-section">
+        <h1 id="question-text">Wait! Before we start...<br>Do you still love Dudu? 🥺</h1>
+        <div class="button-group">
+            <button class="btn btn-yes" onclick="startGifts()">YES! ❤️</button>
+            <button id="no-btn" class="btn btn-no" onmouseover="moveNo()" onclick="moveNo()">No. 😤</button>
+        </div>
+    </div>
+
+    <div id="gift-section" class="hidden">
+        <h1>Yay! I knew it! ✨</h1>
+        <p>Pick a gift for being the best Bubu:</p>
+        <img id="gift-display" src="dudu_chocolate.png" alt="Gift">
+        <div class="button-group" style="position: static;">
+            <button class="btn gift-btn" onclick="showGift('chocolate')">🍫 Choco</button>
+            <button class="btn gift-btn alt" onclick="showGift('kisses')">😘 Kisses</button>
+            <button class="btn gift-btn" onclick="showGift('pats')">👋 Pats</button>
+        </div>
+    </div>
+
+    <script>
+        // Logic for the running "No" button
+        function moveNo() {
+            const noBtn = document.getElementById('no-btn');
+            // Generate random positions (avoiding the very edges)
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
+            
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            
+            // Fun little text change if she keeps trying
+            document.getElementById('question-text').innerText = "Hey! Stop trying to click No! 😂";
+        }
+
+        // Logic to switch to the gift section
+        function startGifts() {
+            document.getElementById('question-section').classList.add('hidden');
+            document.getElementById('gift-section').classList.remove('hidden');
+        }
+
+        // Logic for gift swapping
+        function sh

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Surprise for Kitten!</title>
+    <style>
+        /* (Insert your existing CSS from previous steps here) */
+        :root {
+            --bg-color: #fffaf0;
+            --text-color: #5d4037;
+            --accent-pink: #ffdae9;
+            --accent-yellow: #fff9c4;
+            --soft-red: #ef9a9a;
+        }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-x: hidden; }
+        .container { width: 90%; text-align: center; z-index: 10; transition: all 0.5s ease; }
+        .hidden { display: none !important; opacity: 0; }
+        .invisible { opacity: 0; pointer-events: none; transform: translateY(10px); transition: all 0.5s ease; }
+        .visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        h1 { font-size: 1.6rem; line-height: 1.4; margin-bottom: 20px; }
+        .image-display { width: 100%; max-width: 280px; border-radius: 20px; margin: 15px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .gift-box-wrapper { font-size: 80px; cursor: pointer; display: inline-block; margin: 20px 0; animation: bounce 1.2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .btn { padding: 12px 25px; font-size: 1rem; font-weight: bold; border-radius: 50px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); touch-action: manipulation; margin: 5px; cursor: pointer; }
+        .btn-yes { background-color: #a5d6a7; color: white; }
+        .btn-no { background-color: var(--soft-red); color: white; position: relative; z-index: 12; }
+        .gift-btn { background-color: var(--accent-pink); width: 120px; }
+        .btn-extra { background-color: #ce93d8; color: white; width: 80%; margin-top: 25px; }
+        #letter-section { display: none; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-height: 70vh; overflow-y: auto; border: 2px dashed var(--accent-pink); }
+        .letter-content { font-style: italic; line-height: 1.6; text-align: left; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="espresso.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="question-section" class="container">
+        <h1 id="main-text">Wait! Kitten...<br>Do you still love Daddy? 🥺</h1>
+        <div style="height: 100px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+            <button class="btn btn-yes" onclick="startExperience()">YES! ❤️</button>
+            <button id="no-btn" class="btn btn-no" onmouseover="moveNo()" onclick="moveNo()" ontouchstart="moveNo()">No. 😤</button>
+        </div>
+    </div>
+
+    <div id="setup-section" class="container hidden">
+        <h1>Hehe, Good Girl! ✨</h1>
+        <p>Daddy has a surprise for you...</p>
+        <img class="image-display" src="dudu_gifts_setup.png">
+        <div id="mystery-gift" class="gift-box-wrapper" onclick="revealOptions()">🎁</div>
+        <div id="reveal-area" class="invisible">
+            <h1 style="color: var(--soft-red); font-size: 1.5rem;">So, baby, which one are you picking? 💖</h1>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                <button class="btn gift-btn" onclick="activateGift('icecream')">🍦 Ice Cream</button>
+                <button class="btn gift-btn" style="background: var(--accent-yellow)" onclick="activateGift('kisses')">😘 Kiss</button>
+                <button class="btn gift-btn" onclick="activateGift('hug')">🫂 Hug</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gift-section" class="container hidden">
+        <h1>There you go! ✨</h1>
+        <img id="gift-display" class="image-display" src="Daddy_icecream.gif">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+            <button class="btn gift-btn" onclick="swap('icecream')">🍦 Ice Cream</button>
+            <button class="btn gift-btn" style="background: var(--accent-yellow)" onclick="swap('kisses')">😘 Kiss</button>
+            <button class="btn gift-btn" onclick="swap('hug')">🫂 Hug</button>
+        </div>
+        <button class="btn btn-extra" onclick="showLetter()">Not enough?! 🤨</button>
+    </div>
+
+    <div id="letter-section" class="container hidden">
+        <h2 style="color: var(--soft-red)">To my favorite Kitten... 💌</h2>
+        <div class="letter-content"> 
+        
+        Hey you,
+
+I knew ice cream and hugs wouldn't be enough for a girl as special as you.
+
+I just to say that ig you won coming back and that's what's best for you..i was preparing this for a different theme but it seems fate had something else for us yeah? so now daddy can't do anything but make this as a goodbye gift..........I'll always love you... even if i made you hate me now.. take care of yourself my love~
+
+Always yours, 
+Silver.
+
+            </div>
+        <button class="btn" style="margin-top: 20px; background: var(--accent-yellow)" onclick="location.reload()">Back to start? ❤️</button>
+    </div>
+
+    <script>
+        // Updated Start Function to include Music
+        function startExperience() {
+            const music = document.getElementById('bg-music');
+            music.play().catch(error => console.log("Autoplay blocked, waiting for interaction."));
+            
+            showLobby();
+        }
+
+        function showLobby() {
+            document.getElementById('question-section').classList.add('hidden');
+            setTimeout(() => { document.getElementById('setup-section').classList.remove('hidden'); }, 300);
+        }
+
+        function revealOptions() {
+            document.getElementById('mystery-gift').style.display = 'none';
+            document.getElementById('reveal-area').classList.add('visible');
+        }
+
+        function activateGift(giftType) {
+            document.getElementById('gift-display').src = 'Daddy_' + giftType + '.gif';
+            document.getElementById('setup-section').classList.add('hidden');
+            setTimeout(() => { document.getElementById('gift-section').classList.remove('hidden'); }, 300);
+        }
+
+        function swap(type) {
+            document.getElementById('gift-display').src = 'Daddy_' + type + '.gif';
+        }
+
+        function showLetter() {
+            document.getElementById('gift-section').classList.add('hidden');
+            setTimeout(() => {
+                document.getElementById('letter-section').classList.remove('hidden');
+                document.getElementById('letter-section').style.display = 'block';
+                document.body.style.overflowY = 'auto';
+            }, 300);
+        }
+
+        function moveNo() {
+            const noBtn = document.getElementById('no-btn');
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = Math.floor(Math.random() * (window.innerWidth - 100)) + 'px';
+            noBtn.style.top = Math.floor(Math.random() * (window.innerHeight - 50)) + 'px';
+            document.getElementById('main-text').innerHTML = "Hey! No is not an option! <br>Click YES 😤";
+        }
+    </script>
+</body>
+</html>
